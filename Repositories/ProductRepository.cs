@@ -20,7 +20,11 @@ public class ProductRepository : IProductRepository
     }
     public Product? GetById(int id)
     {
-        return _context.Products.FirstOrDefault(p => p.Id == id);
+        var product = _context.Products.FirstOrDefault(p => p.Id == id);
+        if (product == null)
+            throw new NullReferenceException();
+
+        return product;
     }
     public Product Create(Product product)
     {
@@ -33,7 +37,7 @@ public class ProductRepository : IProductRepository
     {
         var product = _context.Products.Find(id);
         if (product == null)
-            return null;
+            throw new NullReferenceException();
 
         product.Name = productUpdated.Name;
         product.Description = productUpdated.Description;
@@ -48,7 +52,7 @@ public class ProductRepository : IProductRepository
     {
         var product = _context.Products.Find(id);
         if (product == null)
-            return null;
+            throw new NullReferenceException();
 
         _context.Remove(product);
         _context.SaveChanges();

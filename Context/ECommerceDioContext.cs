@@ -10,7 +10,6 @@ public class ECommerceDioContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<Payment> Payments { get; set; }
-    public DbSet<Role> Roles { get; set; }
 
     private IConfiguration _configuration;
 
@@ -61,7 +60,7 @@ public class ECommerceDioContext : DbContext
 
             entity.Property(c => c.Password).IsRequired().HasMaxLength(255).IsUnicode(false);
 
-            entity.HasOne(c => c.Role).WithMany(r => r.Clients).HasForeignKey(c => c.RoleId).OnDelete(DeleteBehavior.Cascade);
+            entity.Property(c => c.Role).HasConversion<string>().HasMaxLength(30);
         });
 
         modelBuilder.Entity<Order>(entity =>
@@ -101,15 +100,6 @@ public class ECommerceDioContext : DbContext
             entity.HasOne(p => p.Order).WithMany(o => o.Payments).HasForeignKey(p => p.OrderId);
         });
 
-        modelBuilder.Entity<Role>(entity =>
-        {
-            entity.HasKey(r => r.Id);
-
-            entity.Property(r => r.RoleDescription).IsRequired().HasMaxLength(100).IsUnicode(false);
-
-            entity.HasIndex(r => r.RoleDescription).IsUnique();
-        });
-
         modelBuilder.Entity<Product>().HasData(
             new Product
             {
@@ -118,14 +108,6 @@ public class ECommerceDioContext : DbContext
                 Description = "Violão de 6 cordas em nylon",
                 Price = 200,
                 AvaiableStock = 20
-            }
-        );
-
-        modelBuilder.Entity<Role>().HasData(
-            new Role
-            {
-                Id = 1,
-                RoleDescription = "Administrator"
             }
         );
     }

@@ -48,6 +48,11 @@ namespace ECommerceDio.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
@@ -55,8 +60,6 @@ namespace ECommerceDio.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("Clients");
                 });
@@ -192,46 +195,6 @@ namespace ECommerceDio.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ECommerceDio.Models.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("RoleDescription")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleDescription")
-                        .IsUnique();
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            RoleDescription = "Administrator"
-                        });
-                });
-
-            modelBuilder.Entity("ECommerceDio.Models.Client", b =>
-                {
-                    b.HasOne("ECommerceDio.Models.Role", "Role")
-                        .WithMany("Clients")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("ECommerceDio.Models.Order", b =>
                 {
                     b.HasOne("ECommerceDio.Models.Client", "Client")
@@ -288,11 +251,6 @@ namespace ECommerceDio.Migrations
             modelBuilder.Entity("ECommerceDio.Models.Product", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("ECommerceDio.Models.Role", b =>
-                {
-                    b.Navigation("Clients");
                 });
 #pragma warning restore 612, 618
         }

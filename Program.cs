@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ECommerceDioContext>(options =>
 });
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
 var app = builder.Build();
 
