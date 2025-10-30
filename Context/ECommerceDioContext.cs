@@ -9,8 +9,7 @@ public class ECommerceDioContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<Payment> Payments { get; set; }
-
+    
     private IConfiguration _configuration;
 
     public ECommerceDioContext(DbContextOptions<ECommerceDioContext> options, IConfiguration configuration) : base(options)
@@ -67,7 +66,7 @@ public class ECommerceDioContext : DbContext
         {
             entity.HasKey(o => o.Id);
 
-            entity.Property(o => o.Status).IsRequired().IsUnicode(false);
+            entity.Property(o => o.Status).IsRequired().HasConversion<string>().HasMaxLength(30).IsUnicode(false);
 
             entity.Property(o => o.TotalPrice).HasColumnType("decimal(18,2)").HasPrecision(18,2);
 
@@ -85,19 +84,6 @@ public class ECommerceDioContext : DbContext
             entity.HasOne(o => o.Order).WithMany(x => x.OrderItems).HasForeignKey(o => o.OrderId);
 
             entity.HasOne(o => o.Product).WithMany(x => x.OrderItems).HasForeignKey(o => o.ProductId);
-        });
-
-        modelBuilder.Entity<Payment>(entity =>
-        {
-            entity.HasKey(p => p.Id);
-
-            entity.Property(p => p.Status).IsRequired().IsUnicode(false);
-
-            entity.Property(p => p.MethodPayment).IsUnicode(false);
-
-            entity.Property(p => p.PaymentDate).IsRequired();
-
-            entity.HasOne(p => p.Order).WithMany(o => o.Payments).HasForeignKey(p => p.OrderId);
         });
 
         modelBuilder.Entity<Product>().HasData(

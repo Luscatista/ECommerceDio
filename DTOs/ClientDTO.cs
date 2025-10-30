@@ -3,7 +3,7 @@ using ECommerceDio.Models.Enums;
 
 namespace ECommerceDio.DTOs;
 
-public class ClientDTO
+public record ClientDTO
 {
     public string Name { get; set; } = null!;
     public string Email { get; set; } = null!;

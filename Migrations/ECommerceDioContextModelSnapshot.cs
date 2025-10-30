@@ -53,9 +53,6 @@ namespace ECommerceDio.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("varchar(30)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -80,8 +77,9 @@ namespace ECommerceDio.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(30)");
 
                     b.Property<decimal?>("TotalPrice")
                         .HasPrecision(18, 2)
@@ -118,37 +116,6 @@ namespace ECommerceDio.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("OrderItems");
-                });
-
-            modelBuilder.Entity("ECommerceDio.Models.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("MethodPayment")
-                        .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("ECommerceDio.Models.Product", b =>
@@ -225,17 +192,6 @@ namespace ECommerceDio.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ECommerceDio.Models.Payment", b =>
-                {
-                    b.HasOne("ECommerceDio.Models.Order", "Order")
-                        .WithMany("Payments")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("ECommerceDio.Models.Client", b =>
                 {
                     b.Navigation("Orders");
@@ -244,8 +200,6 @@ namespace ECommerceDio.Migrations
             modelBuilder.Entity("ECommerceDio.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
-
-                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("ECommerceDio.Models.Product", b =>

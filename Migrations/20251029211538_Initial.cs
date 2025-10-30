@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ECommerceDio.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,7 +27,6 @@ namespace ECommerceDio.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
                     Role = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -62,7 +61,7 @@ namespace ECommerceDio.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<string>(type: "longtext", unicode: false, nullable: false)
+                    Status = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     ClientId = table.Column<int>(type: "int", nullable: false),
@@ -108,31 +107,6 @@ namespace ECommerceDio.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "Payments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<string>(type: "longtext", unicode: false, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    MethodPayment = table.Column<string>(type: "longtext", unicode: false, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PaymentDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    OrderId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payments_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "AvaiableStock", "Description", "Name", "Price" },
@@ -160,11 +134,6 @@ namespace ECommerceDio.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_OrderId",
-                table: "Payments",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Products_Name",
                 table: "Products",
                 column: "Name",
@@ -178,13 +147,10 @@ namespace ECommerceDio.Migrations
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
-                name: "Payments");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Clients");

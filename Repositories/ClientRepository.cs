@@ -43,6 +43,22 @@ public class ClientRepository : IClientRepository
 
         return clientViewModel;
     }
+    public ClientViewModel? GetByEmail(string clientEmail)
+    {
+        var client = _context.Clients.Where(c => c.Email.ToLower().Contains(clientEmail.ToLower())).FirstOrDefault();
+        if (client == null)
+            throw new NullReferenceException();
+
+        var clientViewModel = new ClientViewModel
+        {
+            Id = client.Id,
+            Name = client.Name,
+            Email = client.Email,
+            Role = client.Role,
+        };
+
+        return clientViewModel;   
+    }
     public void Create(ClientDTO clientDTO)
     {
         var client = new Client
@@ -69,12 +85,49 @@ public class ClientRepository : IClientRepository
     }
 
     public ClientViewModel? Update(int id, ClientDTO clientDTO)
-    {
-        throw new NotImplementedException();
+    {      
+        var client = _context.Clients.Find(id);
+        if (client == null)
+            throw new NullReferenceException();
+
+        client.Name = clientDTO.Name;
+        client.Email = clientDTO.Email;
+        client.Password = clientDTO.Password;
+        client.Role = clientDTO.Role;
+
+        var passwordService = new PasswordService();
+        client.Password = passwordService.HashPassword(client);
+
+        _context.SaveChanges();
+
+        var clientViewModel = new ClientViewModel
+        {
+            Id = client.Id,
+            Name = client.Name,
+            Email = client.Email,
+            Role = client.Role,
+        };
+
+        return clientViewModel;              
     }
 
     public ClientViewModel? Delete(int id)
     {
-        throw new NotImplementedException();
+        var client = _context.Clients.Find(id);
+        if (client is null)
+            throw new Exception();
+
+        _context.Clients.Remove(client);
+        _context.SaveChanges();
+
+        var clientViewModel = new ClientViewModel
+        {
+            Id = client.Id,
+            Name = client.Name,
+            Email = client.Email,
+            Role = client.Role,
+        };
+
+        return clientViewModel;
     }
 }

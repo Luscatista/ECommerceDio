@@ -3,7 +3,7 @@ using ECommerceDio.Models.Enums;
 
 namespace ECommerceDio.ViewModels;
 
-public class ClientViewModel
+public record ClientViewModel
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;

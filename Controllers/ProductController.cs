@@ -20,17 +20,31 @@ public class ProductController : ControllerBase
         return Ok(_productRepository.GetAll());
     }
 
-    [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    // [HttpGet("{id}")]
+    // public IActionResult GetById(int id)
+    // {
+    //     try
+    //     {
+    //         var product = _productRepository.GetById(id);
+    //         return Ok(product);
+    //     }
+    //     catch
+    //     {
+    //         return NotFound("Product not found.");
+    //     }
+    // }
+    
+    [HttpGet("search/name/")]
+    public IActionResult GetByName(string productName)
     {
         try
         {
-            var product = _productRepository.GetById(id);
+            var product = _productRepository.GetByName(productName);
             return Ok(product);
         }
         catch
         {
-        return NotFound("Product not found.");
+        return NotFound("Product(s) not found.");
         }
     }
 
@@ -42,30 +56,30 @@ public class ProductController : ControllerBase
         return Created();
     }
 
-    [HttpPut("{id}")]
-    public IActionResult Update(int id, Product product)
-    {
-        try
-        {            
-            return Ok(_productRepository.Update(id, product));
-        }
-        catch
-        {
-            return NotFound("Product not found.");
-        }
-    }
+    // [HttpPut("{id}")]
+    // public IActionResult Update(int id, Product product)
+    // {
+    //     try
+    //     {            
+    //         return Ok(_productRepository.Update(id, product));
+    //     }
+    //     catch
+    //     {
+    //         return NotFound("Product not found.");
+    //     }
+    // }
 
-    [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
-    {
-        try
-        {
-            _productRepository.Delete(id);
-            return NoContent();
-        }
-        catch
-        {
-            return NotFound("Product not found.");
-        }
-    }
+    // [HttpDelete("{id}")]
+    // public IActionResult Delete(int id)
+    // {
+    //     try
+    //     {
+    //         _productRepository.Delete(id);
+    //         return NoContent();
+    //     }
+    //     catch
+    //     {
+    //         return NotFound("Product not found.");
+    //     }
+    // }
 }

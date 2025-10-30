@@ -118,3 +118,4 @@ C:\Users\lucas\OneDrive\Anexos\Documentos\DIO\Projetos-Desafios\ECommerceDio\obj
 C:\Users\lucas\OneDrive\Anexos\Documentos\DIO\Projetos-Desafios\ECommerceDio\obj\Debug\net8.0\ECommerceDio.pdb
 C:\Users\lucas\OneDrive\Anexos\Documentos\DIO\Projetos-Desafios\ECommerceDio\obj\Debug\net8.0\ECommerceDio.genruntimeconfig.cache
 C:\Users\lucas\OneDrive\Anexos\Documentos\DIO\Projetos-Desafios\ECommerceDio\obj\Debug\net8.0\ref\ECommerceDio.dll
+C:\Users\lucas\OneDrive\Anexos\Documentos\DIO\Projetos-Desafios\ECommerceDio\bin\Debug\net8.0\RabbitMQ.Client.dll
