@@ -94,6 +94,22 @@ public class ECommerceDioContext : DbContext
                 Description = "Violão de 6 cordas em nylon",
                 Price = 200,
                 AvaiableStock = 20
+            },
+            new Product
+            {
+                Id = 2,
+                Name = "Flauta",
+                Description = "Instrumento de sopro",
+                Price = 60,
+                AvaiableStock = 60
+            },
+            new Product
+            {
+                Id = 3,
+                Name = "Piano",
+                Description = "Piano classico",
+                Price = 2000,
+                AvaiableStock = 10
             }
         );
     }

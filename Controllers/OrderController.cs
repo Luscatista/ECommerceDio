@@ -1,4 +1,5 @@
 using ECommerceDio.DTOs;
+using ECommerceDio.Exceptions;
 using ECommerceDio.interfaces;
 using ECommerceDio.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -41,13 +42,19 @@ public class OrderController : ControllerBase
         }
     }
 
-    // [HttpPost]
-    // public IActionResult Create(Order order)
-    // {
-    //     _orderRepository.Create(order);
-
-    //     return Created();
-    // }
+    [HttpPost]
+    public IActionResult Create(OrderDTO orderDTO)
+    {
+        try
+        {
+            _orderRepository.Create(orderDTO);
+            return Created();
+        }
+        catch (InsufficientStockException)
+        {
+            return BadRequest("Insufficient Stock");
+        }
+    }
 
     // [HttpPut("{id}")]
     // public IActionResult Update(int id, Order order)

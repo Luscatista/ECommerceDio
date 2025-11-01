@@ -1,4 +1,5 @@
 using ECommerceDio.Context;
+using ECommerceDio.DTOs;
 using ECommerceDio.interfaces;
 using ECommerceDio.Models;
 using ECommerceDio.ViewModels;
@@ -15,9 +16,21 @@ public class ProductRepository : IProductRepository
         _context = context;
     }
 
-    public List<Product>? GetAll()
+    public List<ProductViewModel>? GetAll()
     {
-        return _context.Products.ToList();
+        var productList = _context.Products.Select(p => new ProductViewModel
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Description,
+            Price = p.Price,
+            AvaiableStock = p.AvaiableStock
+        }).ToList();
+
+        if (productList == null)
+            throw new Exception();
+
+        return productList;
     }
     
     // public Product? GetById(int id)
@@ -28,12 +41,19 @@ public class ProductRepository : IProductRepository
 
     //     return product;
     // }
-    public Product Create(Product product)
+    public void Create(ProductDTO productDTO)
     {
+        var product = new Product
+        {
+            Name = productDTO.Name,
+            Description = productDTO.Description,
+            Price = productDTO.Price,
+            AvaiableStock = productDTO.AvaiableStock
+        };
+
         _context.Products.Add(product);
         _context.SaveChanges();
 
-        return product;
     }
     // public Product? Update(int id, Product productUpdated)
     // {
@@ -62,16 +82,24 @@ public class ProductRepository : IProductRepository
     //     return product;
     // }
 
-    public Product? GetByName(string productName)
+    public ProductViewModel? GetByName(string productName)
     {
         var product = _context.Products
         .Where(p => p.Name.ToLower()
         .Contains(productName.ToLower()))
         .FirstOrDefault();
 
-        if (product == null) 
+        if (product == null)
             throw new NullReferenceException();
 
-        return product;
+        var productViewModel = new ProductViewModel
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            AvaiableStock = product.AvaiableStock
+        };
+        return productViewModel;
     }
 }

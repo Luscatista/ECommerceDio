@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceDio.Migrations
 {
     [DbContext(typeof(ECommerceDioContext))]
-    [Migration("20251029211538_Initial")]
+    [Migration("20251101194619_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -84,7 +84,7 @@ namespace ECommerceDio.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(30)");
 
-                    b.Property<decimal?>("TotalPrice")
+                    b.Property<decimal>("TotalPrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
@@ -162,6 +162,22 @@ namespace ECommerceDio.Migrations
                             Description = "Violão de 6 cordas em nylon",
                             Name = "Violão",
                             Price = 200m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AvaiableStock = 60,
+                            Description = "Instrumento de sopro",
+                            Name = "Flauta",
+                            Price = 60m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AvaiableStock = 10,
+                            Description = "Piano classico",
+                            Name = "Piano",
+                            Price = 2000m
                         });
                 });
 

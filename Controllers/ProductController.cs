@@ -1,3 +1,5 @@
+using ECommerceDio.DTOs;
+using ECommerceDio.Exceptions;
 using ECommerceDio.interfaces;
 using ECommerceDio.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -49,11 +51,17 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create(Product product)
+    public IActionResult Create(ProductDTO productDTO)
     {
-        _productRepository.Create(product);
-
+        try
+        {
+        _productRepository.Create(productDTO);
         return Created();
+        }
+        catch(InsufficientStockException)
+        {
+            return BadRequest("insufficient stock");
+        }
     }
 
     // [HttpPut("{id}")]

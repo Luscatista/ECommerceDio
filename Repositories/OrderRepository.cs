@@ -1,5 +1,7 @@
+using System.Security.Cryptography.X509Certificates;
 using ECommerceDio.Context;
 using ECommerceDio.DTOs;
+using ECommerceDio.Exceptions;
 using ECommerceDio.interfaces;
 using ECommerceDio.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,13 +12,10 @@ public class OrderRepository : IOrderRepository
 {
     private readonly ECommerceDioContext _context;
     private readonly IClientRepository _clientRepository;
-    private readonly IProductRepository _productRepository;
-
-    public OrderRepository(ECommerceDioContext context, IClientRepository clientRepository, IProductRepository productRepository)
+    public OrderRepository(ECommerceDioContext context, IClientRepository clientRepository)
     {
         _context = context;
         _clientRepository = clientRepository;
-        _productRepository = productRepository;
     }
     public List<Order>? GetAll()
     {
@@ -34,53 +33,63 @@ public class OrderRepository : IOrderRepository
 
         return order;
     }
-    // public void Create(OrderDTO orderDTO)
-    // {
-    //     // Cliente Nome
-    //     // Produtos e quantidades
+    public void Create(OrderDTO orderDTO)
+    {
+        using var transaction = _context.Database.BeginTransaction();
 
-    //     var client = _clientRepository.GetByEmail(orderDTO.ClientEmail);
-    //     if (client == null)
-    //         throw new Exception();
+        try
+        {
 
-    //     var order = new Order
-    //     {
-    //         ClientId = client.Id,
-    //         TotalPrice = 0
-    //     };
+            var client = _clientRepository.GetByEmail(orderDTO.ClientEmail);
+            if (client == null)
+                throw new Exception("Client not found.");
 
-    //     var orderItemList = new Dictionary<int, int>();
-    //     var shoppingCart = new List<OrderItem>();
+            var order = new Order
+            {
+                ClientId = client.Id,
+                TotalPrice = 0
+            };
 
-    //     foreach (KeyValuePair<string, int> item in orderDTO.ProductAndQuantities)
-    //     {
-    //         var product = _productRepository.GetByName(item.Key);
-    //         if (product == null)
-    //             throw new Exception($"{item.Key} is invalid.");
+            _context.Orders.Add(order);
+            _context.SaveChanges();
 
-    //         order.TotalPrice += product.Price * item.Value;
+            var orderItemList = new List<OrderItem>();
 
-    //         orderItemList.Add(product.Id, item.Value);            
-    //     } 
+            foreach (KeyValuePair<string, int> item in orderDTO.ProductAndQuantities)
+            {
+                var product = _context.Products.FirstOrDefault(p => p.Name == item.Key);
+                if (product == null)
+                    throw new Exception($"{item.Key} is invalid.");
 
-    //     foreach(var item in orderItemList)
-    //     {
-    //         var orderItem = _context.OrderItems.FirstOrDefault(o => o.ProductId == item.Key && o.OrderId == order.Id);
-    //         if(orderItem == null)
-    //         {
-    //             var newOrderItem = new OrderItem
-    //             {
-    //                 ProductId = item.Key
-    //             }
-    //             _context.OrderItems.Add();
-    //         }
-    //     }
+                if (item.Value > product.AvaiableStock)
+                    throw new InsufficientStockException(product.Name);
+
+                order.TotalPrice += product.Price * item.Value;
+                product.AvaiableStock -= item.Value;
+
+                var orderItem = new OrderItem
+                {
+                    ProductId = product.Id,
+                    OrderId = order.Id,
+                    Quantity = item.Value
+                };
+
+                orderItemList.Add(orderItem);
+            }
+
+            _context.OrderItems.AddRange(orderItemList);
+
+            _context.SaveChanges();
+
+            transaction.Commit();
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
         
-    
-    //     // _context.Orders.Add(order);
-    //     // _context.SaveChanges();
-
-    // }
+    }
     public Order? Update(int id, Order order)
     {
         throw new NotImplementedException();

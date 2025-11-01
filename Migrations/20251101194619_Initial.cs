@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace ECommerceDio.Migrations
 {
     /// <inheritdoc />
@@ -63,7 +65,7 @@ namespace ECommerceDio.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Status = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
@@ -110,7 +112,12 @@ namespace ECommerceDio.Migrations
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "AvaiableStock", "Description", "Name", "Price" },
-                values: new object[] { 1, 20, "Violão de 6 cordas em nylon", "Violão", 200m });
+                values: new object[,]
+                {
+                    { 1, 20, "Violão de 6 cordas em nylon", "Violão", 200m },
+                    { 2, 60, "Instrumento de sopro", "Flauta", 60m },
+                    { 3, 10, "Piano classico", "Piano", 2000m }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Clients_Email",

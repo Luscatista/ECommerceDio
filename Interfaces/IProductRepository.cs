@@ -1,3 +1,4 @@
+using ECommerceDio.DTOs;
 using ECommerceDio.Models;
 using ECommerceDio.ViewModels;
 
@@ -5,10 +6,10 @@ namespace ECommerceDio.interfaces;
 
 public interface IProductRepository
 {
-    List<Product>? GetAll();
+    List<ProductViewModel>? GetAll();
     // Product? GetById(int id);
-    Product? GetByName(string productName);
-    Product Create(Product product);
+    ProductViewModel? GetByName(string productName);
+    void Create(ProductDTO productDTO);
     // Product? Update(int id, Product product);
     // Product? Delete(int id);
 }
