@@ -43,6 +43,22 @@ public class ClientRepository : IClientRepository
 
         return clientViewModel;
     }
+    public Client? GetByEmailPassword(string email, string password)
+    {
+        var client = _context.Clients.FirstOrDefault(c => c.Email == email);
+        if (client == null)
+            throw new Exception();
+        
+        var passwordService = new PasswordService();
+        var result = passwordService.VerifyPassword(client, password);
+
+        if(result == true)
+        {
+            return client;
+        }
+        
+        return null;
+    }
     public ClientViewModel? GetByEmail(string clientEmail)
     {
         var client = _context.Clients.Where(c => c.Email.ToLower().Contains(clientEmail.ToLower())).FirstOrDefault();
